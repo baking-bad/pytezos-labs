@@ -1,0 +1,38 @@
+{
+  "name": "pytezos-labs",
+  "version": "1.0.0",
+  "description": "Interactive course: Tezos internals with PyTezos",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "vuepress dev docs --host localhost",
+    "build": "vuepress build docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baking-bad/pytezos-labs.git"
+  },
+  "author": "Baking Bad",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/baking-bad/pytezos-labs/issues"
+  },
+  "homepage": "https://pytezos.baking-bad.org",
+  "dependencies": {
+    "markdown-it-prism": "^2.0.5",
+    "openapi-markdown": "^1.2.3",
+    "vue-fab": "^2.3.1",
+    "vuepress-plugin-autometa": "^0.1.13",
+    "vuepress-plugin-sitemap": "^2.3.1"
+  },
+  "devDependencies": {
+    "@vuepress/plugin-google-analytics": "^1.5.2",
+    "vuepress": "^1.4.0",
+    "vuepress-plugin-clean-urls": "^1.1.1",
+    "vuepress-theme-book": "0.0.1"
+  },
+  "resolutions": {
+    "watchpack": "1.6.1"
+  }
+}
