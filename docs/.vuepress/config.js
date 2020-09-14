@@ -17,7 +17,8 @@ module.exports = {
     displayAllHeaders: true,
     nav: [
       { text: "Home", link: "/" },
-      { text: "Notebooks ", link: "/tutorials/01"},
+      { text: "Notebooks", link: "/tutorials/01"},
+      { text: "Reference", link: "https://pytezos.org/contents.html"},
     ],
     sidebar: [
       {
