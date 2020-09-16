@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Chapter 2 | PyTezos Labs</title>
+    <meta name="generator" content="VuePress 1.5.4">
+    <link rel="icon" type="image/ico" href="/favicon.ico">
+    <meta name="description" content="Working with Tezos RPC: networks, chains, blocks, operations, and context.">
+    <meta name="image" content="https://pytezos.baking-bad.org/og.png">
+    <meta name="twitter:title" content="Chapter 2">
+    <meta name="twitter:description" content="Working with Tezos RPC: networks, chains, blocks, operations, and context.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://pytezos.baking-bad.org/og.png">
+    <meta name="twitter:url" content="https://pytezos.baking-bad.org/tutorials/02.html">
+    <meta name="twitter:site" content="@TezosBakingBad">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Chapter 2">
+    <meta property="og:description" content="Working with Tezos RPC: networks, chains, blocks, operations, and context.">
+    <meta property="og:image" content="https://pytezos.baking-bad.org/og.png">
+    <meta property="og:url" content="https://pytezos.baking-bad.org/tutorials/02.html">
+    <meta property="og:site_name" content="PyTezos Labs">
+    <meta itemprop="name" content="Chapter 2">
+    <meta itemprop="description" content="Working with Tezos RPC: networks, chains, blocks, operations, and context.">
+    <meta itemprop="image" content="https://pytezos.baking-bad.org/og.png">
+    <link rel="preload" href="/assets/css/0.styles.09cd54d3.css" as="style"><link rel="preload" href="/assets/js/app.5a6b4172.js" as="script"><link rel="preload" href="/assets/js/2.218e55c4.js" as="script"><link rel="preload" href="/assets/js/9.f52bb189.js" as="script"><link rel="preload" href="/assets/js/4.ca9f46cb.js" as="script"><link rel="preload" href="/assets/js/3.9ecc255a.js" as="script"><link rel="prefetch" href="/assets/js/5.667bf234.js"><link rel="prefetch" href="/assets/js/6.3bc27dde.js"><link rel="prefetch" href="/assets/js/7.53f1cf7e.js"><link rel="prefetch" href="/assets/js/8.1e4c5d24.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.09cd54d3.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="/pytezos.png" alt="PyTezos Labs" class="logo"> <span class="site-name can-hide">PyTezos Labs</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/tutorials/01.html" class="nav-link">
+  Notebooks
+</a></div><div class="nav-item"><a href="https://pytezos.org/contents.html" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Reference
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/tutorials/01.html" class="nav-link">
+  Notebooks
+</a></div><div class="nav-item"><a href="https://pytezos.org/contents.html" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Reference
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>Notebooks</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/tutorials/01.html" class="sidebar-link">Chapter 1</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/tutorials/01.html#base58-encoding" class="sidebar-link">Base58 encoding</a></li><li class="sidebar-sub-header"><a href="/tutorials/01.html#secret-key-public-key-public-key-hash" class="sidebar-link">Secret key, public key, public key hash</a></li><li class="sidebar-sub-header"><a href="/tutorials/01.html#multiple-elliptic-curves" class="sidebar-link">Multiple elliptic curves</a></li><li class="sidebar-sub-header"><a href="/tutorials/01.html#encrypted-keys-and-commitments" class="sidebar-link">Encrypted keys and commitments</a></li><li class="sidebar-sub-header"><a href="/tutorials/01.html#generating-keys-and-signatures" class="sidebar-link">Generating keys and signatures</a></li></ul></li><li><a href="/tutorials/02.html" aria-current="page" class="active sidebar-link">Chapter 2</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/tutorials/02.html#network" class="sidebar-link">Network</a></li><li class="sidebar-sub-header"><a href="/tutorials/02.html#chain" class="sidebar-link">Chain</a></li><li class="sidebar-sub-header"><a href="/tutorials/02.html#block" class="sidebar-link">Block</a></li><li class="sidebar-sub-header"><a href="/tutorials/02.html#block-slices-cycles-and-voting-periods" class="sidebar-link">Block slices, cycles, and voting periods</a></li><li class="sidebar-sub-header"><a href="/tutorials/02.html#operation-group" class="sidebar-link">Operation group</a></li><li class="sidebar-sub-header"><a href="/tutorials/02.html#context" class="sidebar-link">Context</a></li><li class="sidebar-sub-header"><a href="/tutorials/02.html#boosting-rpc" class="sidebar-link">Boosting RPC</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="chapter-2"><a href="#chapter-2" class="header-anchor">#</a> Chapter 2</h1> <p>Working with Tezos RPC: networks, chains, blocks, operations, and context.</p> <p>In this chapter we will explore main blockchain structures and how to query them using PyTezos.<br>
+Tezos node software is built in a <a href="https://tezos.gitlab.io/whitedoc/the_big_picture.html" target="_blank" rel="noopener noreferrer">modular way<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a>, there is a generic <strong>Shell</strong> which is responsible for basic block validation, p2p, storage, and <strong>Protocol</strong> that contains main logic. Thanks to the <a href="https://learn.tqtezos.com/files/self-amendment.html#introduction" target="_blank" rel="noopener noreferrer">self-amendment<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> feature this protocol code can be changed up to a complete replacement. RPC interface provided by the Tezos node reflects this architecture:</p> <ul><li>There are shell-level endpoints that don't depend on a particular protocol;</li> <li>There are block-level endpoints which can response differently depending on the protocol version (block level).</li></ul> <p>PyTezos wrapper reflects the RPC endpoint scheme and provides so called &quot;chaining&quot; interface for creating requests. For instance if you want to query <code>GET /a/b/c/d</code> it would be <code>a.b.c.d()</code>. If it's a <code>POST</code> request it would be <code>a.b.c.d.post()</code>. RPC documentation is integrated to the query engine and you can check available methods on each step, just execute e.g. <code>a.b.c</code> in a notebook cell.</p> <h2 id="network"><a href="#network" class="header-anchor">#</a> Network</h2> <p>Before moving on to playing with RPC we need to connect to one of Tezos networks. Aside from the <code>mainnet</code> which carries value, there are several public <a href="https://tezos.gitlab.io/introduction/test_networks.html" target="_blank" rel="noopener noreferrer">testnets<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a>, plus anyone can spawn his own <a href="https://tezos.gitlab.io/developer/flextesa.html" target="_blank" rel="noopener noreferrer">sandboxnet<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> e.g. for debugging dapps.</p> <p>First of all we create a PyTezos client instance and initialize the network (by default it uses the network with latest known protocol activated):</p> <div class="language-python extra-class"><pre class="language-python"><code><span class="token keyword">from</span> pytezos <span class="token keyword">import</span> pytezos
+
+pytezos <span class="token operator">=</span> pytezos<span class="token punctuation">.</span>using<span class="token punctuation">(</span>shell<span class="token operator">=</span><span class="token string">'mainnet'</span><span class="token punctuation">)</span>
+pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>node<span class="token punctuation">.</span>uri
+</code></pre></div><div class="result"><pre>'https://rpc.tzkt.io/mainnet/'</pre></div> <p>It can also be node uri:</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos <span class="token operator">=</span> pytezos<span class="token punctuation">.</span>using<span class="token punctuation">(</span>shell<span class="token operator">=</span><span class="token string">'https://mainnet-tezos.giganode.io/'</span><span class="token punctuation">)</span>
+</code></pre></div><p>Note that <code>using</code> method returns a new instance of PyTezos client and does not modifies the existing one.</p> <h2 id="chain"><a href="#chain" class="header-anchor">#</a> Chain</h2> <p>There can be multiple chains at a particular moment in a single network:</p> <ul><li>There is a special testing period in the voting process during which new protocol is battle tested but detached from the real funds.</li> <li>Due to network delays or other reasons two or more block producers can simultaneously extend main chain essentially creating forks. With time (usually 1-2 blocks) all such chains except one with the highest <a href="https://tezos.gitlab.io/whitedoc/proof_of_stake.html?highlight=fitness#fitness" target="_blank" rel="noopener noreferrer">&quot;fitness&quot;<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> become orphans (not adopted by others) and then obsolete.</li></ul> <p>Keep in mind, that your RPC provider can be at an orphan state at some point of time and rollback only after several minutes.</p> <p>Most time you will work with the <code>main</code> chain:</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>chains<span class="token punctuation">.</span>main
+</code></pre></div><div class="result"><pre>&lt;pytezos.rpc.shell.ChainQuery object at 0x7fcf48d768d0&gt;
+<p>Properties
+.path  # /chains/main
+.node  # https://mainnet-tezos.giganode.io/ ()</p>
+<p>RPC endpoints
+.blocks
+.chain_id
+.checkpoint
+.invalid_blocks
+.mempool</p>
+<p>Helpers
+.watermark()</p></pre></div><p></p> <p>Note the output — this is the builtin documentation mentioned earlier. In particular list of RPC methods is useful for exploration or if you forget something.</p> <h2 id="block"><a href="#block" class="header-anchor">#</a> Block</h2> <p>Blocks can be accessed by hash, level (height), special identifiers (<code>head</code>, <code>genesis</code>), or offsets (<code>head-123</code>, <code>head+123</code>).<br>
+In a nutshell, block consists of a header and a list of operations. Block hash (blake2b) is actually derived from the byte representation of its header.</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>chains<span class="token punctuation">.</span>main<span class="token punctuation">.</span>blocks<span class="token punctuation">.</span>head<span class="token punctuation">.</span><span class="token builtin">hash</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>'BLP93MhbrKvMKLsBuy8UErpwn1QYVCR7DHwhD3geWfXgemZY3jm'</pre></div> <p>There are useful shortcuts for most common scenarios, e.g. accessing head.</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>head<span class="token punctuation">.</span>header<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>{'protocol': 'PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb',
+ 'chain_id': 'NetXdQprcVkpaWU',
+ 'hash': 'BLP93MhbrKvMKLsBuy8UErpwn1QYVCR7DHwhD3geWfXgemZY3jm',
+ 'level': 1131056,
+ 'proto': 6,
+ 'predecessor': 'BKkHEv6Qq4cWo14QkfQSNFpWiczCxtZvBGUgmRrD62DEf8YbHwj',
+ 'timestamp': '2020-09-16T15:51:58Z',
+ 'validation_pass': 4,
+ 'operations_hash': 'LLobEPiM5zFMSwFQVMxttzS9sTtBJPhqp5Q7shkhp5ZpxFVk8TGDL',
+ 'fitness': ['01', '0000000000074230'],
+ 'context': 'CoV64qaFykBGjNzStJDdTu7NyCPrmPVMPRmFFHVYrdzS1zrGxiZD',
+ 'priority': 0,
+ 'proof_of_work_nonce': 'ba45727c3e590600',
+ 'signature': 'siga8iyjVFyKDkycPSSX47hs4S9byVPEtScXsL5C82yuWD1Xm4qDDKkJvUTjuQUhE5Uwk4NiqiXHfQq53EoRwwrUJpxxQ9vA'}</pre></div> <p>Block header fields are also divided into &quot;shell&quot; (protocol independent) and protocol-specific.<br>
+Read detailed description of each field in the <a href="https://tezos.gitlab.io/whitedoc/proof_of_stake.html#blocks" target="_blank" rel="noopener noreferrer">whitedoc<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <p>A useful source of information is the block receipt containing state changes happened in the result of applying this block. There are also operation receipts which we will examine a bit later.</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>blocks<span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">.</span>metadata<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>{'protocol': 'PtCJ7pwoxe8JasnHY8YonnLYjcVHmhiARPJvqcC6VfHT5s8k8sY',
+ 'next_protocol': 'PtCJ7pwoxe8JasnHY8YonnLYjcVHmhiARPJvqcC6VfHT5s8k8sY',
+ 'test_chain_status': {'status': 'not_running'},
+ 'max_operations_ttl': 60,
+ 'max_operation_data_length': 16384,
+ 'max_block_header_length': 238,
+ 'max_operation_list_length': [{'max_size': 32768, 'max_op': 32},
+  {'max_size': 32768},
+  {'max_size': 135168, 'max_op': 132},
+  {'max_size': 524288}],
+ 'baker': 'tz3RDC3Jdn4j15J7bBHZd29EUee9gVB1CxD9',
+ 'level': {'level': 10000,
+  'level_position': 9999,
+  'cycle': 2,
+  'cycle_position': 1807,
+  'voting_period': 0,
+  'voting_period_position': 9999,
+  'expected_commitment': False},
+ 'voting_period_kind': 'proposal',
+ 'nonce_hash': None,
+ 'consumed_gas': '0',
+ 'deactivated': [],
+ 'balance_updates': [{'kind': 'contract',
+   'contract': 'tz3RDC3Jdn4j15J7bBHZd29EUee9gVB1CxD9',
+   'change': '-16000000'},
+  {'kind': 'freezer',
+   'category': 'deposits',
+   'delegate': 'tz3RDC3Jdn4j15J7bBHZd29EUee9gVB1CxD9',
+   'level': 2,
+   'change': '16000000'}]}</pre></div> <p>In order to better understand what receipt fields mean, check out the articles about <a href="https://tezos.gitlab.io/whitedoc/proof_of_stake.html" target="_blank" rel="noopener noreferrer">Proof-of-stake<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> in Tezos and how <a href="https://learn.tqtezos.com/files/self-amendment.html" target="_blank" rel="noopener noreferrer">self-amendmend<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> works.<br>
+There are also several shortcuts for most common cases:</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>head<span class="token punctuation">.</span>cycle<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>276</pre></div> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>head<span class="token punctuation">.</span>voting_period<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>34</pre></div> <p>Lastly, you can examine some rare and interesting cases, e.g. protocol activation:</p> <div class="language-python extra-class"><pre class="language-python"><code>protocol_parameters <span class="token operator">=</span> pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>blocks<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>protocol_parameters<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># genesis block</span>
+protocol_parameters<span class="token punctuation">[</span><span class="token string">'commitments'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span>  <span class="token comment"># recomended allocations (aka commitments)</span>
+</code></pre></div><div class="result"><pre>[['btz1LKddKfC9cEitY8Q5bMnGS9yj9uPWnmX68', '4974860242'],
+ ['btz1LKj1hxiXZUkZGuCMTNtGos8npjo9VjFnJ', '14770866000'],
+ ['btz1LKkKTQ34S1BSrcEwYFpVRhm2inDYfjCMg', '1551209817'],
+ ['btz1LKmBsCgNKpkWq3hBBqrPPyEmE1XegouD8', '12000000000'],
+ ['btz1LKnYAGSyGRJiY7pieJVK9RR6v3e2ko6QS', '9000000000']]</pre></div> <h2 id="block-slices-cycles-and-voting-periods"><a href="#block-slices-cycles-and-voting-periods" class="header-anchor">#</a> Block slices, cycles, and voting periods</h2> <p>This not a wrapped RPC endpoint but a convenient extension allowing to manipulate with block slices and iterate over larger timeframes namely <a href="http://doc.tzalpha.net/whitedoc/proof_of_stake.html#cycles" target="_blank" rel="noopener noreferrer"><strong>cycles</strong><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> and <a href="http://doc.tzalpha.net/whitedoc/voting.html#periods" target="_blank" rel="noopener noreferrer"><strong>voting periods</strong><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a>.</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>blocks<span class="token punctuation">[</span><span class="token number">20</span><span class="token punctuation">:</span><span class="token number">30</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>[['BLGD9HqcQiyKa9eQ8pBuNVPR3bkc3XgaT9BgxLaeE2jdvcpCYEX',
+  'BLmJDttDAPHdS7THb1oaRVzhakZoUJTLdxz1sq49Vw6E2vDxBpG',
+  'BLUHiyMJSwhVETPprN14kQcQodM5n6yJtTtyD9rTkJbAwD2UCXX',
+  'BLrX28Eay45rbaCCMuwSH8q6uPTXcB9LiMHy699NfSssbNLzxzF',
+  'BM3YXmkqgKzWevHe28iKDN1JxXa2XV8rjUwpz7PMyrS1y5FS1NQ',
+  'BLk8qc7hdBRtB6cBJ2PL2UTtu1eEkaxkpVYTZz113rZEZswYU2k',
+  'BLyAEwaXShJuZasvUezHUfLqzZ48V8XrPvXF2wRaH15tmzEpsHT',
+  'BMWVEwEYw9m5iaHzqxDfkPzZTV4rhkSouRh3DkVMVGkxZ3EVaNs',
+  'BMM2XoWLyzhYfXDc7p5uZ5a4n8318GoXbJiFUKejAQthjANxpm3',
+  'BKzHjmWqi7wXqrjbKi5NVZ7UGH8hQ9mrkpaABrzSyEfquULxnan',
+  'BKy1nQDvKvic22MzCkqUNeVEENDZzkaoBkVSiK7uBeC8mwWEUNy']]</pre></div> <p>Block slice has <code>get_range</code> method that returns boundary levels which can be useful when working with cycles/voting periods.</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>cycles<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>get_range<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>(1130497, 1131056)</pre></div> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>voting_periods<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>get_range<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>(1, 32768)</pre></div> <p>The main purpose of block slices (aside from determining boundaries) is operation search, e.g. when you have recently sent an operation and want to find it by hash:</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>blocks<span class="token punctuation">[</span><span class="token number">1129600</span><span class="token punctuation">:</span><span class="token number">1129700</span><span class="token punctuation">]</span><span class="token punctuation">.</span>find_operation<span class="token punctuation">(</span><span class="token string">'onw8xuA8SKNdJo4VUf5vyhJKRmggWRVuLAavCbRnmQvE1zr65KF'</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>{'protocol': 'PsCARTHAGazKbHtnKfLzQg3kms52kSRpgnDY982a9oYsSXRLQEb',
+ 'chain_id': 'NetXdQprcVkpaWU',
+ 'hash': 'onw8xuA8SKNdJo4VUf5vyhJKRmggWRVuLAavCbRnmQvE1zr65KF',
+ 'branch': 'BLCWACrJjKFGEwUecZQjna3eiWCy21xCz1cu3TdpmSiLN1KCmJz',
+ 'contents': [{'kind': 'transaction',
+   'source': 'tz1bNL8YciKPtCuKNzQWxVF8Bnm1h3sd8sbB',
+   'fee': '8113',
+   'counter': '5373301',
+   'gas_limit': '78140',
+   'storage_limit': '0',
+   'amount': '0',
+   'destination': 'KT1VG2WtYdSWz5E7chTeAdDPZNy2MpP8pTfL',
+   'parameters': {'entrypoint': 'default',
+    'value': {'prim': 'Right',
+     'args': [{'prim': 'Left',
+       'args': [{'bytes': 'c139928f72887b79db36eb848dbe78aafa429c980421cc7e88a6d117a22949b1'}]}]}},
+   'metadata': {'balance_updates': [{'kind': 'contract',
+      'contract': 'tz1bNL8YciKPtCuKNzQWxVF8Bnm1h3sd8sbB',
+      'change': '-8113'},
+     {'kind': 'freezer',
+      'category': 'fees',
+      'delegate': 'tz1ei4WtWEMEJekSv8qDnu9PExG6Q8HgRGr3',
+      'cycle': 275,
+      'change': '8113'}],
+    'operation_result': {'status': 'applied',
+     'storage': {'prim': 'Pair', 'args': [{'int': '4'}, {'prim': 'Unit'}]},
+     'big_map_diff': [{'action': 'update',
+       'big_map': '4',
+       'key_hash': 'exprtfWG91BKChtLpWyNfQCyCzUfkXWCT6CQp2rVYoN5UWGdfRp5gP',
+       'key': {'bytes': '637a015a2ef8bf984c1c3d9c764afede725dc8e309b24706e9d3333a77f4ae0c'}}],
+     'consumed_gas': '67833',
+     'storage_size': '1859'},
+    'internal_operation_results': [{'kind': 'transaction',
+      'source': 'KT1VG2WtYdSWz5E7chTeAdDPZNy2MpP8pTfL',
+      'nonce': 0,
+      'amount': '1505762090',
+      'destination': 'tz1bNL8YciKPtCuKNzQWxVF8Bnm1h3sd8sbB',
+      'result': {'status': 'applied',
+       'balance_updates': [{'kind': 'contract',
+         'contract': 'KT1VG2WtYdSWz5E7chTeAdDPZNy2MpP8pTfL',
+         'change': '-1505762090'},
+        {'kind': 'contract',
+         'contract': 'tz1bNL8YciKPtCuKNzQWxVF8Bnm1h3sd8sbB',
+         'change': '1505762090'}],
+       'consumed_gas': '10207'}}]}}],
+ 'signature': 'sigY3K6ZYBg4QbzoC1XUqq6UqT1yTLxyh5uge9ixmbGpNTH7P2BZxRphXzAY7hTDNTx8EiUzundyQMNYxoUZ7Tzus3RRqpKs'}</pre></div> <h2 id="operation-group"><a href="#operation-group" class="header-anchor">#</a> Operation group</h2> <p>If we take a look at the list of operations included into the block we will find a list of lists actually, moreover the size of the outer list is always 4.</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>head<span class="token punctuation">.</span>operation_hashes<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>[['oo2BUCNwz6G4L5rb3AhicaN9edJNP646vAyz6f4eHRuuybyxWq9',
+  'ooH77gGGD6pMNYtrmWzzz1yxwvqkXzjE94XeYHnvuy3u5SrQkYh',
+  'oo7qN3AGx4eTWLEqaPr8P5FJstdG52D8DPuTMm2aiwtzr9B7rue',
+  'oo2kw6RSkUSz3weWhv1C5dE688AhfS6quyMgx6K27MdQwSLNobw',
+  'op3FbdodNFrPQU1BZiSJnzZyHtx2WpnAEn2Zrzd8Xgm1DiyNM7N',
+  'oo7UmkyVr2Scz9gdbpZHipDmuYHytaQR9BgdfjguDuqKxR5zbH9',
+  'onwNrn3k7wjAZ4vQCbBqJzrFQh3ozcY1ZbiWqw4EA4nR8aYQ59e',
+  'oo1e5NDtFMyyVQMmRMYUKYrMRYdQm4TLQgnUw5R6gPJoupbPcEC',
+  'opL52uGpWFtTSezdihuLaEbfS84s1iXY2ryLiJDQEfBsCCeWdxL',
+  'opWdVVyvvXsrqLy6zZHA63UCxKNbF9Fe6SKNmJbMPC8RbCwmfJk',
+  'onmoRk4W7HLVsroSNsKNyitDLpfC9hf9y1YdXWWmX74zTXEMzHA',
+  'onkeQZuNmDGrWN3uVeBtStHeDAc4BeCJUQEWt3NAeBDaABrY8Na',
+  'onibycjE8JERgnoSp3JBvoZLY5R8czmbdZoca5RrzQWfM3Mz4yW',
+  'ooEoLToW78btzrR2LcDp883orn4DYfMFU7W7ZDxVYY8Ddod9n7Q',
+  'opR8rhznAUanCFuFh8G1HNdfXsMSfjHCydmLKSR5e2fdAvzmuzT',
+  'oodxFfKfSD4kfpHJarE1nVzdNropHK7rtEoKDif53AopZME4xkX',
+  'ooJvBd43SEWv3xksS2Ymnwb4jAvUA6g98yZ2emMLKrurwBCXQFv',
+  'oon9Y4ZQEgEKMCs8R3u6kDy2fyEFgx7gcrFF8JwvafAgBHKwUJF',
+  'ooN3sxtnLVA5L6oJvvD1AGUj6ZRAQvFSEENDJfWDQcV2HKV1fiW',
+  'oojAabp2dKm5NuD8eErwvzuW8uX1pRMyLa8AfQ6EhEr8mTKWtCs',
+  'opL83imySoU8bbHdB98acaqxPCvb4pryRPAx4RZosyQT4MepsF3',
+  'oogHbf2QUdMMRu8B7rssQyFzVjUvjbqJ4LxVZfCxW2detoxjfg4',
+  'onyyRRrRuEXmq8RpB93hzBMXqVx2PJWvvnbUk7odL39n1CSpaYF'],
+ [],
+ [],
+ ['ongCdvSZSSuNC31CHGoUSTeJGCTwZnXFkoa1iY6481EJgv2pQLH',
+  'ooUdyPxwpt8JP1Ew3tfijtJrJwG3kh8yhMRmDDBjKXquNohShms',
+  'oobKg4oRTFNHYQNYV8zuqHBwdoofxeH3AygQ9WpDz36sdHNAc9e',
+  'onuCEMPsYNEg7NNinFww2VcoK7JEGHFuBCqx1LvhRWhtvQygNFf',
+  'opJcqE9wMkS8PrLpNTzgtMeusDTYc6i6JnP39PssCeDTJ3KRYhB',
+  'opWk1k9YiS6XGYS4VyaZmZG2ZN4wYUem6Lu2Uk7TxVKBUk6BujR',
+  'op8o1YB2AV9rHFJQ5JCCpTbEVL67VvCmiDxqcBzV8awuMszf4jE']]</pre></div> <p>These are the so-called validation passes, the operations are grouped in such a way as to detect the error as early as possible.</p> <ol><li><strong>Endorsement</strong> — contains only operations with kind &quot;endorsement&quot;, which affect the fitness of the block;</li> <li><strong>Vote</strong> — contains &quot;ballot&quot; and &quot;proposal&quot; operations used in the self-amending mechanism;</li> <li><strong>Anonymous</strong> — contains operations that do not have signatures thus cannot be linked to any particular account (until some level);</li> <li><strong>Manager</strong> — contains signed operations that do change account states.</li></ol> <p>Read more about various <a href="https://medium.com/tqtezos/lifecycle-of-an-operation-in-tezos-248c51038ec2" target="_blank" rel="noopener noreferrer">operation kinds<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a>.</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>head<span class="token punctuation">.</span>operations
+</code></pre></div><div class="result"><pre>&lt;pytezos.rpc.protocol.OperationListListQuery object at 0x7fcf3b595588&gt;
+<p>Properties
+.path  # /chains/main/blocks/head/operations
+.node  # https://mainnet-tezos.giganode.io/ ()</p>
+<p>()
+All the operations included in the block.
+:returns: Array</p>
+<p>[] Find operation by hash.</p>
+<p>:param item: Operation group hash (base58)
+:rtype: OperationQuery</p>
+<p>Helpers
+.anonymous
+.endorsements
+.find_ballots()
+.find_origination()
+.find_upvotes()
+.managers
+.votes</p></pre></div><p></p> <p>Note shortcuts for validation passes, also you can search through all operations by hash.</p> <p>So far we used the term &quot;operation&quot; although were actually speaking about &quot;operation groups&quot;. Here's how an operation group is constructed:</p> <div class="language- extra-class"><pre class="language-text"><code>Operation Group  &lt;-- hash refers to the entire group
+└ Content #0
+  └ Main operation
+  └ Internal operation results  &lt;-- only if main operation is &quot;manager&quot; and applied
+    └ Internal operation #0
+    ...
+    └ Internal operation #m
+...
+└ Content #n
+</code></pre></div><p>Multicontent structure essentially allows operation batching, however an important rule must be followed: <strong>only operations with the same validation pass can be batched</strong>.</p> <p>Internal operations may occur as a result of calls to smart contracts, which may invoke other contracts in their turn. Pay attention to the flat structure (intuitively expected tree-like) of internal operations. In Tezos contracts cannot synchronously invoke other contracts but return a list of spawned operations (i.e. async cross-contract calls) instread. The ordering of contract calls is quite unusual, <a href="https://forum.tezosagora.org/t/problems-with-concurrency/1771" target="_blank" rel="noopener noreferrer">BFS<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> is used (usually DFS):</p> <div class="language- extra-class"><pre class="language-text"><code>A      1
+└ B    2
+  └ C  4
+  └ D  5
+  E    3
+  └ F  6
+  └ G  7
+</code></pre></div><p>How to determine the order of a particular operation from the RPC response:</p> <ol><li>Main operations — by <strong>counter</strong>, which is tied to a specific account (signatory) and is incremented by one after each successful operation;</li> <li>Internal operations — by <strong>nonce</strong>, which is being reset on every main operation.</li></ol> <p>PyTezos provides convenient iterators for operations and operation results (receipts):</p> <div class="language-python extra-class"><pre class="language-python"><code><span class="token keyword">from</span> pytezos<span class="token punctuation">.</span>operation<span class="token punctuation">.</span>result <span class="token keyword">import</span> OperationResult
+</code></pre></div><div class="language-python extra-class"><pre class="language-python"><code>opg <span class="token operator">=</span> pytezos<span class="token punctuation">.</span>shell \
+    <span class="token punctuation">.</span>blocks<span class="token punctuation">[</span><span class="token number">1113876</span><span class="token punctuation">]</span> \
+    <span class="token punctuation">.</span>operations<span class="token punctuation">[</span><span class="token string">'opHN29qMFpK6fMswaWmb2WYis7JggqF6fzJtysaB5LRAkzC17Zk'</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    
+<span class="token keyword">for</span> op <span class="token keyword">in</span> OperationResult<span class="token punctuation">.</span>iter_contents<span class="token punctuation">(</span>opg<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>op<span class="token punctuation">[</span><span class="token string">'kind'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'internal'</span> <span class="token keyword">if</span> op<span class="token punctuation">[</span><span class="token string">'internal'</span><span class="token punctuation">]</span> <span class="token keyword">else</span> <span class="token string">''</span><span class="token punctuation">)</span>
+</code></pre></div><div class="stdout"><pre><span class="stream-name">stdout</span><br>transaction 
+transaction internal
+transaction internal
+</pre></div> <div class="language-python extra-class"><pre class="language-python"><code><span class="token keyword">for</span> res <span class="token keyword">in</span> OperationResult<span class="token punctuation">.</span>iter_results<span class="token punctuation">(</span>opg<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>res<span class="token punctuation">[</span><span class="token string">'status'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre></div><div class="stdout"><pre><span class="stream-name">stdout</span><br>applied
+applied
+applied
+</pre></div> <p>You can also aggregate some stats or extract specific fields:</p> <div class="language-python extra-class"><pre class="language-python"><code>opg <span class="token operator">=</span> pytezos<span class="token punctuation">.</span>shell \
+    <span class="token punctuation">.</span>blocks<span class="token punctuation">[</span><span class="token number">850141</span><span class="token punctuation">]</span> \
+    <span class="token punctuation">.</span>operations<span class="token punctuation">[</span><span class="token string">'opGUCeryD3N4pAjLPZNqWVcgkxjPyTVf4y9uRxDzguWaBQvStgj'</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+OperationResult<span class="token punctuation">.</span>burned<span class="token punctuation">(</span>opg<span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>257</pre></div> <div class="language-python extra-class"><pre class="language-python"><code>OperationResult<span class="token punctuation">.</span>originated_contracts<span class="token punctuation">(</span>opg<span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>['KT1XHAmdRKugP1Q38CxDmpcRSxq143KpEiYx']</pre></div> <h2 id="context"><a href="#context" class="header-anchor">#</a> Context</h2> <p>Context is the blockchain state, it keeps actual information about accounts, balances, contract data, and other. Note, that a node has to run in a special <a href="https://tezos.gitlab.io/user/history_modes.html" target="_blank" rel="noopener noreferrer">&quot;archive&quot;<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> mode in order to provide access to the context. Also note that many data providers close particularly heavy context endpoints.</p> <p>The most common scenario using context data is querying account state (balance, storage, code, baker-specific info):</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>head<span class="token punctuation">.</span>context<span class="token punctuation">.</span>contracts<span class="token punctuation">[</span><span class="token string">'tz1cf7vkqZiDwSJRpKN4W3NNHPHAXgomM3GE'</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>{'balance': '24969932',
+ 'delegate': 'tz1NortRftucvAkD1J58L32EhSVrQEWJCEnB',
+ 'counter': '6761142'}</pre></div> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>head<span class="token punctuation">.</span>context<span class="token punctuation">.</span>contracts<span class="token punctuation">[</span><span class="token string">'KT1VG2WtYdSWz5E7chTeAdDPZNy2MpP8pTfL'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>storage<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><div class="result"><pre>{'prim': 'Pair', 'args': [{'int': '4'}, {'prim': 'Unit'}]}</pre></div> <p>There is no public documentation for context endpoints, but you can utilize the one integrated to PyTezos:</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>head<span class="token punctuation">.</span>context<span class="token punctuation">.</span>raw<span class="token punctuation">.</span>json
+</code></pre></div><div class="result"><pre>&lt;pytezos.rpc.protocol.ContextRawJsonQuery object at 0x7fcf48d4b4e0&gt;
+<p>Properties
+.path  # /chains/main/blocks/head/context/raw/json
+.node  # https://mainnet-tezos.giganode.io/ ()</p>
+<p>()
+¯_(ツ)<em>/¯
+:param depth: ¯_(ツ)</em>/¯
+:returns: Object</p>
+<p>RPC endpoints
+.active_delegates_with_rolls
+.big_maps
+.block_priority
+.commitments
+.contracts
+.cycle
+.delegates
+.delegates_with_frozen_balance
+.ramp_up
+.rolls
+.votes</p></pre></div><p></p> <p>For example, you can query all keys of a particular big map:</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>head<span class="token punctuation">.</span>context<span class="token punctuation">.</span>raw<span class="token punctuation">.</span>json<span class="token punctuation">.</span>big_maps<span class="token punctuation">.</span>index<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">]</span><span class="token punctuation">.</span>contents<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span>
+</code></pre></div><div class="result"><pre>['exprvSvW5ffvG4epdyhVxqutvzeWXdCTx8AshBRn2JNxpuTkzyt92o',
+ 'exprvNUxqffUzU5UzdSFh2jYWpA9YmFtj5thBqCAhKAdEZZRLdD2pv',
+ 'exprvMg58jmxM2S5y7Cev4H8E4rQgchCmjkFYTTXX4ZUoR59NfEi27',
+ 'exprvKJfvczXea5o7zn9R7Q3cA1C3zPbR9Y4XjtfGiyFcdcPp6ef6U',
+ 'exprvJmH6JcTnhLkR6BFioC9qqmT1b1AvcxmjCcekxS84oHwNbonFC']</pre></div> <h2 id="boosting-rpc"><a href="#boosting-rpc" class="header-anchor">#</a> Boosting RPC</h2> <p>PyTezos uses several tricks to improve experience with RPC requests. First, it caches deterministic requests (i.e. to past blocks) but only for known public networks. This option can be turned off:</p> <div class="language-python extra-class"><pre class="language-python"><code>pytezos<span class="token punctuation">.</span>shell<span class="token punctuation">.</span>node<span class="token punctuation">.</span>caching <span class="token operator">=</span> <span class="token boolean">False</span>
+</code></pre></div><p>In addition to that, you can use a pool of RPC nodes to make concurrent requests:</p> <div class="language-python extra-class"><pre class="language-python"><code><span class="token keyword">from</span> concurrent<span class="token punctuation">.</span>futures <span class="token keyword">import</span> ThreadPoolExecutor
+<span class="token keyword">import</span> logging
+
+logging<span class="token punctuation">.</span>basicConfig<span class="token punctuation">(</span>level<span class="token operator">=</span>logging<span class="token punctuation">.</span>DEBUG<span class="token punctuation">)</span>
+
+registry <span class="token operator">=</span> pytezos<span class="token punctuation">.</span>using<span class="token punctuation">(</span><span class="token string">'mainnet-pool'</span><span class="token punctuation">)</span> \
+    <span class="token punctuation">.</span>contract<span class="token punctuation">(</span><span class="token string">'KT1ChNsEFxwyCbJyWGSL3KdjeXE28AY1Kaog'</span><span class="token punctuation">)</span>
+
+bakers_addresses <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'tz1abmz7jiCV2GH2u81LRrGgAFFgvQgiDiaf'</span><span class="token punctuation">,</span> 
+                    <span class="token string">'tz1WvL7MKyCuUHfC3FxPFyiXcy8hHTBT3vjE'</span><span class="token punctuation">,</span> 
+                    <span class="token string">'tz1PWCDnz783NNGGQjEFFsHtrcK5yBW4E2rm'</span><span class="token punctuation">]</span>
+
+<span class="token keyword">def</span> <span class="token function">big_map_get</span><span class="token punctuation">(</span>address<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> registry<span class="token punctuation">.</span>big_map_get<span class="token punctuation">(</span>address<span class="token punctuation">,</span> <span class="token string">'head'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> ThreadPoolExecutor<span class="token punctuation">(</span>max_workers<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token keyword">as</span> executor<span class="token punctuation">:</span>
+    snapshot <span class="token operator">=</span> executor<span class="token punctuation">.</span><span class="token builtin">map</span><span class="token punctuation">(</span>big_map_get<span class="token punctuation">,</span> bakers_addresses<span class="token punctuation">)</span>
+</code></pre></div><div class="stderr"><pre><span class="stream-name">stderr</span><br>DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rpc.tzkt.io:443
+DEBUG:urllib3.connectionpool:https://rpc.tzkt.io:443 &quot;GET /mainnet/chains/main/blocks/head/context/contracts/KT1ChNsEFxwyCbJyWGSL3KdjeXE28AY1Kaog HTTP/1.1&quot; 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): tezos-prod.cryptonomic-infra.tech:443
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (2): tezos-prod.cryptonomic-infra.tech:443
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (3): tezos-prod.cryptonomic-infra.tech:443
+DEBUG:urllib3.connectionpool:https://tezos-prod.cryptonomic-infra.tech:443 &quot;GET /chains/main/blocks/head/context/contracts/KT1ChNsEFxwyCbJyWGSL3KdjeXE28AY1Kaog/storage HTTP/1.1&quot; 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): rpc.tezrpc.me:443
+DEBUG:urllib3.connectionpool:https://tezos-prod.cryptonomic-infra.tech:443 &quot;GET /chains/main/blocks/head/context/contracts/KT1ChNsEFxwyCbJyWGSL3KdjeXE28AY1Kaog/storage HTTP/1.1&quot; 200 None
+DEBUG:urllib3.connectionpool:https://tezos-prod.cryptonomic-infra.tech:443 &quot;GET /chains/main/blocks/head/context/contracts/KT1ChNsEFxwyCbJyWGSL3KdjeXE28AY1Kaog/storage HTTP/1.1&quot; 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.tezos.org.ua:443
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.tez.ie:443
+DEBUG:urllib3.connectionpool:https://rpc.tezrpc.me:443 &quot;POST /chains/main/blocks/head/context/contracts/KT1ChNsEFxwyCbJyWGSL3KdjeXE28AY1Kaog/big_map_get HTTP/1.1&quot; 200 None
+DEBUG:urllib3.connectionpool:https://api.tezos.org.ua:443 &quot;POST /chains/main/blocks/head/context/contracts/KT1ChNsEFxwyCbJyWGSL3KdjeXE28AY1Kaog/big_map_get HTTP/1.1&quot; 301 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): mainnet-tezos.giganode.io:443
+DEBUG:urllib3.connectionpool:https://api.tez.ie:443 &quot;POST /chains/main/blocks/head/context/contracts/KT1ChNsEFxwyCbJyWGSL3KdjeXE28AY1Kaog/big_map_get HTTP/1.1&quot; 200 819
+DEBUG:urllib3.connectionpool:https://mainnet-tezos.giganode.io:443 &quot;GET /chains/main/blocks/head/context/contracts/KT1ChNsEFxwyCbJyWGSL3KdjeXE28AY1Kaog/big_map_get HTTP/1.1&quot; 405 None
+</pre></div> <div id="bottom-right-wrapper" class="fab-wrapper" style="right:5vw;bottom:4vh;z-index:999;position:fixed;" data-v-f9cfe6e4><div id="bottom-right-action" class="actions-container" style="bottom:-20px;padding-bottom:20px;" data-v-f9cfe6e4><ul class="fab-list" style="display:none;" data-v-f9cfe6e4 data-v-f9cfe6e4><!----><!----></ul></div> <div class="fab-main pointer" style="background-color:#c6b29b;padding:28px;" data-v-f9cfe6e4><i class="md-24 material-icons main" data-v-f9cfe6e4>add</i> <i class="md-24 material-icons close" data-v-f9cfe6e4>add</i></div></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/tutorials/01.html" class="prev">
+        Chapter 1
+      </a></span> <!----></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.5a6b4172.js" defer></script><script src="/assets/js/2.218e55c4.js" defer></script><script src="/assets/js/9.f52bb189.js" defer></script><script src="/assets/js/4.ca9f46cb.js" defer></script><script src="/assets/js/3.9ecc255a.js" defer></script>
+  </body>
+</html>
