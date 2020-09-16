@@ -26,7 +26,8 @@ module.exports = {
         collapsable: true,
         sidebarDepth: 1,
         children: [
-          "/tutorials/01"
+          "/tutorials/01",
+          "/tutorials/02"
         ]
       },
     ]
